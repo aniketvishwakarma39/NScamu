@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+/* Glass effect card */
+.glass-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.25);
+    padding: 20px;
+    transition: 0.35s ease;
+}
+.glass-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 40px rgba(31,38,135,0.45);
+}
+
+/* Fade cards animation */
+.fade-in {
+    animation: fadeIn 0.8s ease;
+}
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(15px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Gradient title */
+.page-title {
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+</style>
+
+
+<h2 class="page-title fade-in">Assignments</h2>
+
+<div class="row fade-in">
+
+    {% for a in assignments %}
+    <div class="col-md-4 mb-4">
+        <div class="glass-card">
+
+            <h4 class="fw-bold">{{ a.title }}</h4>
+            <p class="text-info fw-semibold">{{ a.subject.name }}</p>
+
+            <p>{{ a.description }}</p>
+
+            <p><strong>Issued:</strong> {{ a.issue_date }}</p>
+
+            <p>
+                <strong>Due:</strong>
+                <span class="{% if today > a.due_date %}text-danger{% else %}text-primary{% endif %}">
+                    {{ a.due_date }}
+                </span>
+
+                {% if today > a.due_date %}
+                    <span class="badge bg-danger ms-1">Overdue</span>
+                {% endif %}
+            </p>
+
+            <a href="{{ a.file.url }}" download class="btn btn-success w-100 mt-2">
+                Download Assignment
+            </a>
+
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

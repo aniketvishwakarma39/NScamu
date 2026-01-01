@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Glow + hover animation */
+.profile-card {
+    transition: 0.3s ease-in-out;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.10);
+}
+.profile-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(0, 123, 255, 0.40);
+}
+
+/* Fade animation */
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(15px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Gradient title (same as profile) */
+.title-box {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    padding: 8px 15px;
+    border-radius: 10px;
+    color: white;
+    display: inline-block;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+/* Notice hover effect */
+.notice-box {
+    transition: 0.3s ease;
+    border-radius: 12px;
+    padding: 20px;
+}
+.notice-box:hover {
+    background: rgba(0, 123, 255, 0.10);
+    transform: scale(1.02);
+}
+
+/* NEW badge */
+.new-badge {
+    background: #ff0040;
+    padding: 5px 10px;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+}
+</style>
+
+
+
+<div class="title-box fade-in">College Notices</div>
+
+<div class="row fade-in">
+    {% for n in notices %}
+    <div class="col-md-6 mb-4">
+
+        <div class="card profile-card notice-box">
+
+            <div class="d-flex justify-content-between">
+                <h5 class="fw-bold">{{ n.title }}</h5>
+
+                {% if n.created_at == today %}
+                    <span class="new-badge">NEW</span>
+                {% endif %}
+            </div>
+
+            <p class="text-muted mt-2">{{ n.description }}</p>
+
+            <p class="mt-2"><strong>Date:</strong> {{ n.created_at }}</p>
+
+            {% if n.file %}
+            <a href="{{ n.file.url }}" 
+               class="btn btn-primary w-100 mt-2"
+               download>
+                Download Attachment
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

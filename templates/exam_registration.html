@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Glow card */
+.profile-card {
+    transition: 0.3s ease-in-out;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.10);
+}
+.profile-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(0,123,255,0.4);
+}
+
+/* Fade animation */
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(15px);}
+    to {opacity:1; transform: translateY(0);}
+}
+
+/* Gradient Title */
+.title-box {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    padding: 8px 15px;
+    border-radius: 10px;
+    color: white;
+    display: inline-block;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+/* Subject card hover */
+.selection-card {
+    transition: 0.3s ease;
+    border-radius: 12px;
+}
+.selection-card:hover {
+    background: rgba(0,123,255,0.10);
+    transform: scale(1.02);
+}
+</style>
+
+
+
+<div class="title-box fade-in">Exam Course Registration</div>
+
+<p class="text-muted fade-in">
+    Select the subjects you want to register for this semester exam.
+    <br>
+    <strong>Note:</strong> Once registered, ₹1500 will be added to your exam fee.
+</p>
+
+
+<form method="post" class="fade-in">
+    {% csrf_token %}
+
+    <div class="row">
+        {% for sub in subjects %}
+        <div class="col-md-4 mb-3">
+
+            <div class="card p-3 selection-card profile-card">
+                <label class="form-check-label fw-bold">
+                    <input class="form-check-input me-2"
+                           type="checkbox"
+                           name="subjects"
+                           value="{{ sub.id }}"
+                           {% if sub.id in selected_ids %}checked{% endif %}>
+                    {{ sub.name }}
+                </label>
+            </div>
+
+        </div>
+        {% empty %}
+        <p class="text-danger">No subjects found for your semester.</p>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary px-4 mt-3">Save Registration</button>
+
+    {% if reg.fee_added %}
+    <p class="mt-3 text-success">
+        ₹1500 exam registration fee has been added to your dues.
+    </p>
+    {% endif %}
+</form>
+
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+
+  <!-- Header + Payment info dropdown -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold mb-0">Billing</h4>
+
+    <div class="dropdown">
+      <button class="btn btn-light rounded-pill px-4 dropdown-toggle"
+              type="button" data-bs-toggle="dropdown">
+        Payment info
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="#">View transactions</a></li>
+        <li><a class="dropdown-item" href="#">Payment advice</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Tabs: ALL / CURRENT / PAID / UNPAID / PARTIAL / CANCELLED -->
+  <ul class="nav nav-tabs small mb-3" id="billingTabs">
+    <li class="nav-item">
+      <button class="nav-link active" data-filter="all">ALL</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-filter="current">CURRENT</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-filter="paid">PAID</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-filter="unpaid">UNPAID</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-filter="partial">PARTIAL PAID</button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" data-filter="cancelled">CANCELLED</button>
+    </li>
+  </ul>
+
+  <!-- Top card: To be paid -->
+  <div class="card shadow-sm mb-3 p-3 text-center">
+    <p class="mb-1 text-muted">To be paid</p>
+    <h3 class="fw-bold mb-1">{{ total_due }}</h3>
+    <p class="mb-2 text-muted">Credit Balance {{ credit_balance }}</p>
+    <button class="btn btn-primary rounded-pill px-4">Pay now</button>
+  </div>
+
+  <!-- View as: Bill item / Category (UI only, abhi Bill item active) -->
+  <div class="d-flex justify-content-center gap-2 mb-2">
+    <button class="btn btn-sm btn-primary rounded-pill">Bill item</button>
+    <button class="btn btn-sm btn-outline-secondary rounded-pill" disabled>Category</button>
+  </div>
+
+  <!-- Bill List -->
+  {% for fee in fees %}
+  {% comment %} status class: settled / unpaid / partial {% endcomment %}
+  <div class="card shadow-sm mb-3 bill-card" data-status="{{ fee.status|lower }}">
+    <div class="p-3">
+
+      <div class="row small mb-1">
+        <div class="col-6 text-muted">BILL NO.</div>
+        <div class="col-6 text-end">{{ fee.id }}</div>
+      </div>
+
+      <div class="row small mb-1">
+        <div class="col-6 text-muted">BILL ITEM</div>
+        <div class="col-6 text-end">
+          Semester {{ fee.semester }} Fee
+        </div>
+      </div>
+
+      <div class="row small mb-1">
+        <div class="col-6 text-muted">DUE DATE</div>
+        <div class="col-6 text-end">
+          {% if fee.due_date %}{{ fee.due_date }}{% else %}-{% endif %}
+        </div>
+      </div>
+
+      <div class="row small mb-1">
+        <div class="col-6 text-muted">AMOUNT</div>
+        <div class="col-6 text-end">{{ fee.total_amount }}</div>
+      </div>
+
+      <div class="row small mb-1">
+        <div class="col-6 text-muted">OUTSTANDING</div>
+        <div class="col-6 text-end">{{ fee.due_amount }}</div>
+      </div>
+
+      <div class="row small mb-1">
+        <div class="col-6 text-muted">STATUS</div>
+        <div class="col-6 text-end">
+          {% if fee.status == "Settled" %}
+            <span class="badge rounded-pill bg-success">Settled</span>
+          {% elif fee.status == "Unpaid" %}
+            <span class="badge rounded-pill bg-danger">Unpaid</span>
+          {% else %}
+            <span class="badge rounded-pill bg-warning text-dark">Partial</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Details row (placeholder) -->
+      <div class="row small">
+        <div class="col-6 text-muted">DETAILS</div>
+        <div class="col-6 text-end">
+          <a href="#" class="text-decoration-none">View &rsaquo;</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% empty %}
+  <p class="text-center text-danger mt-4">No bills found.</p>
+  {% endfor %}
+
+</div>
+
+<!-- Simple JS for tab filtering -->
+<script>
+  (function () {
+    const tabs = document.querySelectorAll('#billingTabs .nav-link');
+    const cards = document.querySelectorAll('.bill-card');
+
+    function applyFilter(filter) {
+      cards.forEach(card => {
+        const status = card.dataset.status; // settled / unpaid / partial
+        let show = false;
+
+        if (filter === 'all') {
+          show = true;
+        } else if (filter === 'paid') {
+          show = (status === 'settled');
+        } else if (filter === 'unpaid') {
+          show = (status === 'unpaid');
+        } else if (filter === 'partial') {
+          show = (status === 'partial');
+        } else if (filter === 'current') {
+          // current = unpaid + partial
+          show = (status === 'unpaid' || status === 'partial');
+        } else if (filter === 'cancelled') {
+          // abhi koi cancelled status nahi, sab hide
+          show = false;
+        }
+
+        card.style.display = show ? '' : 'none';
+      });
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        applyFilter(tab.dataset.filter);
+      });
+    });
+
+    // initial
+    applyFilter('all');
+  })();
+</script>
+
+{% endblock %}

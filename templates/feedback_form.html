@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Glow + hover animation */
+.profile-card {
+    transition: 0.3s ease-in-out;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.10);
+}
+.profile-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(0, 123, 255, 0.40);
+}
+
+/* Fade animation */
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(15px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Gradient title */
+.title-box {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    padding: 8px 15px;
+    border-radius: 10px;
+    color: white;
+    display: inline-block;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+/* Rating Stars Styling */
+.star-label {
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.2s ease;
+}
+.star-label:hover {
+    color: #ff9800;
+    transform: scale(1.2);
+}
+input[type="radio"] {
+    accent-color: #007bff;
+}
+</style>
+
+
+
+<div class="title-box fade-in">Subject Feedback</div>
+<p class="text-muted fade-in">Please rate each subject from 1 to 5 stars.</p>
+
+
+<form method="post" class="fade-in">
+    {% csrf_token %}
+
+    <div class="row">
+        {% for sub in subjects %}
+        <div class="col-md-6 mb-4">
+
+            <div class="card p-3 profile-card">
+
+                <h5 class="fw-bold">{{ sub.name }}</h5>
+
+                <div class="mt-2">
+                    {% for star in "12345" %}
+                        <label class="me-2 star-label">
+                            <input type="radio"
+                                   name="rating_{{ sub.id }}"
+                                   value="{{ forloop.counter }}">
+                            {{ forloop.counter }}★
+                        </label>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary px-4">Submit Feedback</button>
+</form>
+
+{% endblock %}

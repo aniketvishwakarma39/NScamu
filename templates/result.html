@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+/* Glass effect card */
+.glass-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(31,38,135,0.25);
+    transition: 0.3s ease;
+}
+.glass-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 12px 45px rgba(31,38,135,0.5);
+}
+
+/* Fade animation */
+.fade-in {
+    animation: fadeIn 0.8s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Heading */
+.page-title {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+</style>
+
+
+
+<h2 class="page-title fade-in">Final Result</h2>
+
+<div class="glass-card fade-in">
+
+    <h4><b>Name:</b> {{ student.name }}</h4>
+    <h5><b>Roll:</b> {{ student.roll_number }}</h5>
+
+    {% if result %}
+        <hr>
+
+        <p><strong>Total Semesters:</strong> {{ result.total_semesters }}</p>
+        <p><strong>CGPA:</strong> {{ result.cgpa }}</p>
+        <p><strong>Grade:</strong> {{ result.grade }}</p>
+
+        <div class="mt-3">
+            {% if result.cgpa >= 8 %}
+              <span class="badge bg-success p-2 fs-6">Excellent Performance</span>
+            {% elif result.cgpa >= 6 %}
+              <span class="badge bg-primary p-2 fs-6">Good Performance</span>
+            {% else %}
+              <span class="badge bg-danger p-2 fs-6">Needs Improvement</span>
+            {% endif %}
+        </div>
+
+    {% else %}
+        <p class="text-danger mt-3">Result not available.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

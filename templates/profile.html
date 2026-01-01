@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+/* Glow + hover animation */
+.profile-card {
+    transition: 0.3s ease-in-out;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.profile-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(0, 123, 255, 0.4);
+}
+
+/* Fade animation */
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(15px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Image hover animation */
+.profile-photo {
+    transition: 0.4s ease;
+    border-radius: 12px;
+}
+.profile-photo:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+}
+
+/* Label styling */
+.info-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.info-value {
+    color: #222;
+}
+
+/* Gradient title */
+.title-box {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    padding: 8px 15px;
+    border-radius: 10px;
+    color: white;
+    display: inline-block;
+    font-size: 20px;
+}
+</style>
+
+
+
+
+<!-- TOP PROFILE CARD -->
+<div class="card p-4 profile-card fade-in mb-4">
+
+    <div class="title-box mb-3">Student Profile</div>
+
+    <div class="row align-items-center">
+        <div class="col-md-3 text-center">
+            {% if student.photo %}
+                <img src="{{ student.photo.url }}" width="150" class="profile-photo">
+            {% else %}
+                <img src="https://via.placeholder.com/150" class="profile-photo">
+            {% endif %}
+        </div>
+
+        <div class="col-md-9">
+            <h3>{{ student.name }}</h3>
+            <p><b>Status:</b> <span class="text-success">{{ student.status }}</span></p>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p><span class="info-label">Admission No:</span> <span class="info-value">{{ student.admission_no }}</span></p>
+                    <p><span class="info-label">Admission Year:</span> <span class="info-value">{{ student.admission_year }}</span></p>
+                    <p><span class="info-label">Roll No:</span> <span class="info-value">{{ student.roll_no }}</span></p>
+                </div>
+
+                <div class="col-md-6">
+                    <p><span class="info-label">Course:</span> <span class="info-value">{{ student.course }}</span></p>
+                    <p><span class="info-label">Branch:</span> <span class="info-value">{{ student.branch }}</span></p>
+                    <p><span class="info-label">Semester:</span> <span class="info-value">{{ student.semester }}</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- DUPLICATE SECTION BELOW -->
+<div class="card p-4 profile-card fade-in">
+
+    <div class="title-box mb-3">Additional Profile Section</div>
+
+    <div class="row align-items-center">
+        <div class="col-md-3 text-center">
+            {% if student.photo %}
+                <img src="/static/OIP.webp" width="150" class="profile-photo">
+            {% else %}
+                <img src="https://via.placeholder.com/150" class="profile-photo">
+            {% endif %}
+        </div>
+
+        <div class="col-md-9">
+            <h3>{{ student.name }}</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p><span class="info-label">Father’s Name:</span> <span class="info-value">{{ student.father_name }}</span></p>
+                    <p><span class="info-label">Mother’s Name:</span> <span class="info-value">{{ student.mother_name }}</span></p>
+                    <p><span class="info-label">City:</span> <span class="info-value">{{ student.city }}</span></p>
+                </div>
+
+                <div class="col-md-6">
+                    <p><span class="info-label">State:</span> <span class="info-value">{{ student.state }}</span></p>
+                    <p><span class="info-label">Address:</span> 
+                        <span class="info-value">{{ student.address }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

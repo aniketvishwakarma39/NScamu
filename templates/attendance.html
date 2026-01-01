@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+/* Glass effect */
+.glass-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.25);
+    padding: 25px;
+    transition: 0.3s ease;
+}
+.glass-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 10px 40px rgba(31,38,135,0.45);
+}
+
+/* Table glass rows */
+.table-glass tbody tr {
+    transition: 0.3s ease;
+}
+.table-glass tbody tr:hover {
+    background: rgba(255,255,255,0.25) !important;
+    transform: scale(1.01);
+}
+
+/* Fade animation */
+.fade-in {
+    animation: fadeIn 0.8s ease;
+}
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Heading style */
+.page-title {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+</style>
+
+
+
+<h2 class="page-title fade-in">Attendance Report</h2>
+
+<div class="glass-card fade-in mt-3">
+    <table class="table table-bordered table-glass">
+        <thead class="table-light">
+            <tr>
+                <th>Subject</th>
+                <th>Present</th>
+                <th>Absent</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for row in attendance_data %}
+            <tr>
+                <td><b>{{ row.subject.name }}</b></td>
+                <td>{{ row.present }}</td>
+                <td>{{ row.absent }}</td>
+                <td><b>{{ row.percentage }}%</b></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
